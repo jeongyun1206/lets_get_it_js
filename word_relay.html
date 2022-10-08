@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>끝말잇기</title>
+</head>
+<body>
+    <div><span id="order">1</span>번째 참가자</div>
+    <div>제시어: <span id="word"></span></div>
+    <input type="text">
+    <button>입력</button>
+    <script>
+
+const number = parseInt(prompt('몇 명이 참가하나요?'));
+
+if (number)
+{
+    const $button = document.querySelector('button');
+    const $input = document.querySelector('input');
+    const $word = document.querySelector('#word')
+    const $order = document.querySelector('#order');
+
+    let present_word;
+    let new_word;
+    let cur_order = 1;
+
+    const onClickButton = function()
+    {
+        if (new_word.length !== 3)
+        {
+            alert('다시 입력 하세요.');
+        }
+        else if (!present_word || present_word[present_word.length - 1] === new_word[0]) 
+        { // 제시어가 존재 하거나 끝말잇기 규칙이 성립할 경우.
+        
+            // 제시어 교체
+            present_word = new_word;
+            $word.textContent = present_word;
+        
+            // 다음 차례 넘기기
+            if (cur_order === number) // 마지막 차례.
+                cur_order = 1;
+            else
+                cur_order++;
+            $order.textContent = cur_order;
+        }
+        else
+        { // 게임 끝
+            alert('올바르지 않은 단어 입니다.');
+        }
+        // 칸 비우고 커서 고정
+        $input.value = '';
+        $input.focus();
+    };
+
+    const onInput = function(event)
+    {
+        new_word = event.target.value;
+    };
+
+    $button.addEventListener('click', onClickButton);
+    $input.addEventListener('input', onInput);
+
+}
+
+
+
+
+
+</script>
+</body>
+</html>

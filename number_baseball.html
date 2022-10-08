@@ -1,0 +1,99 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>숫자야구</title>
+</head>
+<body>
+    <form id="form">
+        <input type="text" id="input">
+        <button>확인</button>
+    </form>
+    <div id="logs"></div>
+<script>
+
+const $input = document.querySelector('#input');
+const $form = document.querySelector('#form');
+const $logs = document.querySelector('#logs');
+
+const number_arr = [];
+const answer_arr = [];
+const tries = [];
+out = 0;
+
+for (let n = 1; n < 10; n++) number_arr.push(n);
+for (let i = 0; i < 4; i++)
+{
+    let idx = Math.floor(Math.random() * number_arr.length);
+    answer_arr.push(number_arr[idx]);
+    number_arr.splice(idx,1);
+}
+
+const check_user_input = (user_input) => 
+{
+    if (user_input.length !== 4)
+    {
+        return alert('4자리 숫자를 입력해주세요.');
+    }
+    if (new Set(user_input).size !== 4)
+    {
+        return alert('중복되지 않게 입력해주세요.');
+    }
+    if (tries.includes(user_input))
+    {
+        return (alert('이미 시도한 값입니다.'))
+    }
+    return true;
+}
+
+
+
+$form.addEventListener('submit', (event) => {
+    event.preventDefault();
+    const user_input = $input.value;
+    $input.value = '';
+    if (!check_user_input(user_input))
+        return;
+    
+    tries.push(user_input);
+
+    if (answer_arr.join('') === user_input) // 홈런일 경우
+    {
+        $logs.append("홈런!");
+        return ;
+    }
+    
+    if (tries.length == 10)
+    {
+        $logs.append("패배! 정답은 " + answer_arr.join(''));
+        return ;
+    }
+    
+    let strike = 0;
+    let ball = 0;
+    for (let idx = 0; idx < answer_arr.length; idx++)
+    {
+        let index = user_input.indexOf(answer_arr[idx]);
+        if (index === -1)
+            continue ;
+        if (index === idx)
+            strike++;
+        else
+            ball++;
+    }
+    if (!strike && !ball)
+    {
+        out++;
+        if (out <= 2)
+            $logs.append(`${user_input}: ${out} 아웃`, document.createElement('br'));
+        else
+        {
+            $logs.append(`${user_input}: ${out} 아웃`, document.createElement('br'));
+        }
+        return ;
+    }
+    $logs.append(`${user_input}: ${strike} 스트라이크 ${ball} 볼`, document.createElement('br'));
+});
+
+</script>
+</body>
+</html>

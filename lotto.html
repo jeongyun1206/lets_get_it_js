@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="utf-8">
+    <title>로또추첨기</title>
+    <style>
+        .ball {
+            display: inline-block;
+            border: 1px solid black;
+            border-radius: 20px;
+            width: 40px;
+            height: 40px;
+            line-height: 40px;
+            font-size: 20px;
+            text-align: center;
+            margin-right: 20px;
+        }
+    </style>
+</head>
+
+<body>
+<div id="result">추첨 결과는? </div>
+<div id="bonus">보너스: </div>
+<script>
+    $result = document.querySelector('#result');
+    $bonus = document.querySelector('#bonus');
+
+    const candidate = Array(45).fill(0).map((v,i) => i + 1);
+    const shuffle = [];
+    while (candidate.length > 0)
+    {
+        const random = Math.floor(Math.random() * candidate.length);
+        shuffle.push(candidate.splice(random, 1)[0]);
+    }
+    const winballs = shuffle.slice(0,6).sort((a,b) => a - b);
+    const bonus = shuffle[6];
+    
+    const setBall = (i) => () =>
+    {
+        const $ball = document.createElement('div');
+        $ball.className = 'ball';
+        var ballColor;
+        if (i == 6)
+        {
+            $ball.textContent = bonus;
+            $bonus.append($ball);
+            ballColor = Math.floor(bonus / 10);
+        }
+        else
+        {
+            $ball.textContent = winballs[i];
+            $result.append($ball);
+            ballColor = Math.floor(winballs[i] / 10);
+        }
+        $ball.style.color = 'white';
+        switch (ballColor)
+        {
+            case 0:
+                $ball.style.background = 'red';
+                break
+            case 1:
+                $ball.style.background = 'orange';
+                break
+            case 2:
+                $ball.style.background = 'yellow';
+                break
+            case 3:
+                $ball.style.background = 'blue';
+                break
+            case 4:
+                $ball.style.background = 'green';
+                break
+        }
+    }
+
+    for (let i = 0; i < 7; i++)
+    {
+        setTimeout(setBall(i), 1000 * (i + 1))
+    }
+
+</script>
+</body>   
