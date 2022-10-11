@@ -1,0 +1,109 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>가위바위보</title>
+    <style>
+        #computer {
+            width: 142px;
+            height: 200px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="computer"></div>
+    <div>
+        <button id="scissors" class="btn">가위</button>
+        <button id="rock" class="btn">바위</button>
+        <button id="paper" class="btn">보</button>
+    </div>
+    <div id="score">0</div>
+    <script>
+        const $computer = document.querySelector('#computer');
+        const $score = document.querySelector('#score');
+        const $rock = document.querySelector('#rock');
+        const $scissors = document.querySelector('#scissors');
+        const $paper = document.querySelector('#paper');
+        const IMG_URL = '../img/rsp.png';
+    
+        $computer.style.background = `url(${IMG_URL}) 0 0`;
+        $computer.style.backgroundSize = 'auto 200px';
+
+        const rspX = 
+        {
+            scissors: '0',
+            rock: '-220px',
+            paper: '-440px',
+        }
+
+        let rsp_cur = 'scissors';
+        const changeRsp = () =>
+        {
+            switch (rsp_cur)
+            {
+                case 'scissors':
+                    rsp_cur = 'rock'; break;
+                case 'rock':
+                    rsp_cur = 'paper'; break;
+                case 'paper':
+                    rsp_cur = 'scissors'; break;
+                default : break;
+            }
+            $computer.style.background = `url(${IMG_URL}) ${rspX[rsp_cur]} 0`;
+            $computer.style.backgroundSize = 'auto 200px';    
+        }
+
+        let rspObject = {
+            scissors : 1,
+            rock : 0,
+            paper : -1,
+        };
+        let intervalTimer = setInterval(changeRsp,50);
+        let clickAble = true;
+        let myScore = 0;
+        let computerScore = 0;
+        let message;
+        const clickButton = () => {
+            if (clickAble)
+            {
+                clickAble = false;
+                clearInterval(intervalTimer);
+
+                const myChoice = rspObject[event.target.id];
+                const computerChoice = rspObject[rsp_cur];
+                const diff = myChoice - computerChoice;
+                if ([-2, 1].includes(diff)){
+                    computerScore++;
+                    message = '패배';
+                }
+                else if ([-1, 2].includes(diff)) {
+                    myScore++;
+                    message = '승리';
+                }
+                else if ([0].includes(diff)) {
+                    message = '무승부';
+                }
+                $score.textContent = `${message} 내 점수 : ${myScore} 컴퓨터 점수 : ${computerScore}`;
+                if (computerScore == 3){
+                    $score.textContent = "최종 패배.";
+                    return ;
+                }else if (myScore == 3){
+                    $score.textContent = "최종 승리!";
+                    return ;
+                }
+                setTimeout(() => {
+                    intervalTimer = setInterval(changeRsp,50);
+                    clickAble = true;
+                },1000);
+            }
+        }
+        $rock.addEventListener('click', clickButton);
+        $scissors.addEventListener('click', clickButton);
+        $paper.addEventListener('click', clickButton);
+
+        
+    </script>
+</body>
+
+</html>
